@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Map, { GoogleApiWrapper } from 'google-maps-react';
 import {searchNearby} from '../../utils/googleApiHelpers'
 import Header from '../../components/Header/Header';
-import styles from './styles.module.css';
+import styles from './styles.scss';
+import Sidebar from '../../components/Sidebar/Sidebar';
 export class Container extends Component {
     constructor(props) {
         super(props);
@@ -30,6 +31,11 @@ export class Container extends Component {
                 // There was an error
             })
     }
+    // <div className={styles.content}>
+    //                     {this.state.places.map(place => {
+    //                         return (<div key={place.id}>{place.name}</div>)
+    //                     })}
+    //                 </div>
     render() {
         return (
             <div>
@@ -39,11 +45,11 @@ export class Container extends Component {
                     visible={false}
                     className = {styles.wrapper}>
                     <Header/>
-                    <div className={styles.content}>
-                        {this.state.places.map(place => {
-                            return (<div key={place.id}>{place.name}</div>)
-                        })}
-                    </div>
+                    <Sidebar
+                        title = {'Restaurants'}
+                        places = {this.state.places}
+                    />
+
                 </Map>
             </div>
         )
