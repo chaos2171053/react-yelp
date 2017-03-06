@@ -26,16 +26,16 @@ function getDefaultModules() {
     loaders: [
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        loader: 'style-loader!css-loader?modules'
       },
       {
         test: /\.sass/,
         loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded&indentedSyntax'
       },
-      {
-        test: /\.scss/,
-        loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
-      },
+      // {
+      //   test: /\.scss/,
+      //   loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+      // },
       {
         test: /\.less/,
         loader: 'style-loader!css-loader!less-loader'
@@ -51,7 +51,16 @@ function getDefaultModules() {
       {
         test: /\.(mp4|ogg|svg)$/,
         loader: 'file-loader'
-      }
+      },
+      {
+        test: /\.scss$/,
+        exclude: path.resolve(__dirname, 'src/styles'),
+        loader: 'style!css?modules&localIdentName=[name]__[local]!sass?sourceMap=true'
+      }, {
+        test: /\.scss$/,
+        include: path.resolve(__dirname, 'src/styles'),
+        loader: 'style!css!sass?sourceMap=true'
+      },
     ]
   };
 }
