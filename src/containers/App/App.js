@@ -10,6 +10,10 @@ class App extends Component {
         history: PropTypes.object.isRequired
     }
 
+    static contextTypes = {
+        router: PropTypes.object
+    }
+
     content() {
         return (<Router
             history={this.props.history}

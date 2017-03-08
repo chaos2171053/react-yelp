@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Map, { GoogleApiWrapper } from 'google-maps-react';
-import {searchNearby} from '../../utils/googleApiHelpers'
+import { searchNearby } from '../../utils/googleApiHelpers'
 import Header from '../../components/Header/Header';
 import styles from './styles.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -31,31 +31,47 @@ export class Container extends Component {
                 // There was an error
             })
     }
-    // <div className={styles.content}>
-    //                     {this.state.places.map(place => {
-    //                         return (<div key={place.id}>{place.name}</div>)
-    //                     })}
-    //                 </div>
+    onMarkerClick(item) {
+        const { place } = item;
+        const { push } = this.context.router;
+        push(`/map/detail/${place.place_id}`)
+    }
     render() {
+        let children = null;
+        if (this.props.children) {
+            children = React.cloneElement(
+                this.props.children,
+                {
+                    google: this.props.google,
+                    places: this.state.places,
+                    loaded: this.props.loaded,
+                    onMarkerClick: this.onMarkerClick.bind(this)
+                });
+        }
         return (
             <div>
                 <Map
                     google={this.props.google}
                     onReady={this.onReady.bind(this)}
                     visible={false}
-                    className = {styles.wrapper}>
-                    <Header/>
+                    className={styles.wrapper}>
+                    <Header />
                     <Sidebar
-                        title = {'Restaurants'}
-                        places = {this.state.places}
+                        title={'Restaurants'}
+                        places={this.state.places}
                     />
+                    <div className={styles.content}>
+                        {children}
+                    </div>
 
                 </Map>
             </div>
         )
     }
 }
-
+Container.contextTypes = {
+    router: React.PropTypes.object
+}
 export default GoogleApiWrapper({
     apiKey: "AIzaSyC6g4jYffxfZYckTRl-sFVTBT--CJwJpTI"
 })(Container)
