@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { getDetails } from '../../../utils/googleApiHelpers'
 import styles from './styles.scss'
-
+import classnames from 'classnames'
 
 export class Detail extends Component {
+    static childContextTypes = {
+        router: React.PropTypes.object,
+    }
     constructor(props, context) {
         super(props, context)
 

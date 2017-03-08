@@ -5,36 +5,39 @@ import Header from '../../components/Header/Header';
 import styles from './styles.scss';
 import Sidebar from '../../components/Sidebar/Sidebar';
 export class Container extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
+
         this.state = {
             places: [],
             pagination: null
         }
     }
+
     onReady(mapProps, map) {
-        //when the map is ready and mounted
-        const { google } = this.props;
-        const opts = {
-            location: map.center,
-            radius: '500',
-            types: ['cafe']
-        }
-        searchNearby(google, map, opts)
-            .then((results, pagination) => {
-                // We got some results and a pagination object
-                this.setState({
-                    places: results,
-                    pagination
-                })
-            }).catch((status, result) => {
-                // There was an error
+        searchNearby(
+            this.props.google,
+            map,
+            {
+                location: map.center,
+                radius: '500',
+                types: ['cafe']
+            }
+        ).then((results, pagination) => {
+            this.setState({
+                places: results,
+                pagination
             })
+        }).catch((status) => {
+            console.log('error fetching nearby', status)
+        })
     }
+
+    onMapMove() { }
     onMarkerClick(item) {
-        const { place } = item;
-        const { push } = this.context.router;
-        push(`/map/detail/${place.place_id}`)
+      const {place} = item;
+      const {push} = this.context.router;
+      push(`/map/detail/${place.place_id}`)
     }
     render() {
         let children = null;
@@ -45,11 +48,14 @@ export class Container extends Component {
                     google: this.props.google,
                     places: this.state.places,
                     loaded: this.props.loaded,
-                    onMarkerClick: this.onMarkerClick.bind(this)
+                    router: this.context.router,
+                    onMove: this.onMapMove.bind(this),
+                    onMarkerClick: this.onMarkerClick.bind(this),
+                    zoom: this.props.zoom
                 });
         }
         return (
-            <div>
+
                 <Map
                     google={this.props.google}
                     onReady={this.onReady.bind(this)}
@@ -58,6 +64,7 @@ export class Container extends Component {
                     <Header />
                     <Sidebar
                         title={'Restaurants'}
+                        onListItemClick={this.onMarkerClick.bind(this)}
                         places={this.state.places}
                     />
                     <div className={styles.content}>
@@ -65,7 +72,7 @@ export class Container extends Component {
                     </div>
 
                 </Map>
-            </div>
+
         )
     }
 }

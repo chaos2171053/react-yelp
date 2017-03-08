@@ -6,12 +6,12 @@ class App extends Component {
         super(props);
     }
     static propTypes = {
-        routes: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
+        routes: React.PropTypes.object.isRequired,
+        history: React.PropTypes.object.isRequired
     }
 
     static contextTypes = {
-        router: PropTypes.object
+        router: React.PropTypes.object
     }
 
     content() {
